@@ -55,7 +55,7 @@ export default function App() {
 
   async function createNote(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.target);
+    const form = new FormData(event.currentTarget);
     const imageFile = form.get("image") as File;
     console.log(imageFile?.name);
 
@@ -66,14 +66,14 @@ export default function App() {
     });
 
     console.log(newNote);
-    if (newNote.image)
+    if (newNote?.image)
       await uploadData({
         path: ({ identityId }) => `media/${identityId}/${newNote.image}`,
         data: imageFile,
       }).result;
 
     fetchNotes();
-    event.target.reset();
+    event.currentTarget.reset();
   }
 
   async function deleteNote({ id }: { id: string }) {
