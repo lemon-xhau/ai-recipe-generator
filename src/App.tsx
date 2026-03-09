@@ -16,6 +16,7 @@ import "@aws-amplify/ui-react/styles.css";
 import { getUrl } from "aws-amplify/storage";
 import { uploadData } from "aws-amplify/storage";
 import { generateClient } from "aws-amplify/data";
+import type { Schema } from "../amplify/data/resource";
 import outputs from "../amplify_outputs.json";
 
 /**
@@ -23,12 +24,12 @@ import outputs from "../amplify_outputs.json";
  */
 
 Amplify.configure(outputs);
-const client = generateClient({
+const client = generateClient<Schema>({
   authMode: "userPool",
 });
 
 export default function App() {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState<Schema["Note"]["type"][]>([]);
 
   useEffect(() => {
     fetchNotes();
@@ -52,7 +53,7 @@ export default function App() {
     setNotes(notes);
   }
 
-  async function createNote(event) {
+  async function createNote(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.target);
     const imageFile = form.get("image") as File;
@@ -75,7 +76,7 @@ export default function App() {
     event.target.reset();
   }
 
-  async function deleteNote({ id }) {
+  async function deleteNote({ id }: { id: string }) {
     const toBeDeletedNote = {
       id: id,
     };
